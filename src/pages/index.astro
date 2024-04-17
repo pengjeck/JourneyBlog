@@ -7,6 +7,7 @@ import Post from "@/layouts/partials/Post.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
 import { sortByDate } from "@/lib/utils/sortFunctions";
 import { markdownify } from "@/lib/utils/textConverter";
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Image } from "astro:assets";
 import { getEntryBySlug } from "astro:content";
 const homepage = await getEntryBySlug("homepage", "index");
@@ -55,6 +56,7 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
                 .map((post) => <Post post={post} />)
             }
             <Pagination currentPage={1} totalPages={totalPages} />
+            <SpeedInsights />
           </div>
         </div>
       </div>
