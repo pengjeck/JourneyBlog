@@ -24,3 +24,5 @@ package-lock.json
 
 # ignore .astro directory
 .astro
+
+pnpm-lock.yaml
