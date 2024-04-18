@@ -51,5 +51,4 @@ export default defineConfig({
     },
     extendDefaultPlugins: true,
   },
-  experimental: { assets: true },
 });

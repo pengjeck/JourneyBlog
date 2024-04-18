@@ -1,14 +1,14 @@
 {
   "site": {
-    "title": "Northendlab | Astro Blog Theme",
-    "base_url": "https://example.com",
+    "title": "Journey Peng's Blog",
+    "base_url": "https://stride-blog.vercel.app/",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
     "logo": "/images/logo.svg",
     "logo_width": "197",
     "logo_height": "31",
-    "logo_text": "Northendlab"
+    "logo_text": "Journey"
   },
 
   "settings": {
@@ -23,8 +23,8 @@
   },
 
   "metadata": {
-    "meta_author": "Themefisher",
+    "meta_author": "Journey Peng",
     "meta_image": "/images/og-image.png",
-    "meta_description": "Northendlab Light Astro Blog Theme"
+    "meta_description": "Journey Peng's blog for share."
   }
 }
