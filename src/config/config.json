@@ -5,8 +5,8 @@
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
-    "logo": "/images/logo.svg",
-    "logo_width": "197",
+    "logo_ignore": "/images/logo.png",
+    "logo_width": "31",
     "logo_height": "31",
     "logo_text": "Journey"
   },
@@ -19,7 +19,7 @@
 
   "params": {
     "contact_form_action": "#",
-    "copyright": "© 2023 [Themefisher](https://themefisher.com/) All Rights Reserved"
+    "copyright": "© 2023 [JourneyPeng](https://journeypeng.best/) All Rights Reserved"
   },
 
   "metadata": {

@@ -1,7 +1,6 @@
 ---
 import { settings } from "@/config/config.json";
 import Base from "@/layouts/Base.astro";
-import Cta from "@/layouts/components/Cta.astro";
 import Pagination from "@/layouts/components/Pagination.astro";
 import Post from "@/layouts/partials/Post.astro";
 import { getSinglePage } from "@/lib/contentParser.astro";
@@ -63,5 +62,5 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
     </div>
   </div>
   <!-- ./End Blogs -->
-  <Cta cta={call_to_action} />
+  <!-- <Cta cta={call_to_action} /> -->
 </Base>
