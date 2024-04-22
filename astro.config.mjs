@@ -9,6 +9,9 @@ import remarkToc from "remark-toc";
 import config from "./src/config/config.json";
 import { mermaid } from "./src/plugins/mermaid";
 
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+
 // https://astro.build/config
 export default defineConfig({
   site: config.site.base_url ? config.site.base_url : "http://examplesite.com",
@@ -37,9 +40,11 @@ export default defineConfig({
     mdx(),
   ],
   markdown: {
+    rehypePlugins: [rehypeKatex],
     remarkPlugins: [
-      // remarkToc,
+      remarkToc,
       mermaid,
+      remarkMath,
       [
         remarkCollapse,
         {
