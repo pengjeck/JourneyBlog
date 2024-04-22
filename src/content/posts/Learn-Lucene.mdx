@@ -41,8 +41,8 @@ graph LR;
 ![google-advance-search](http://journeypeng.best/images/post/google-advance-search.png)
 
 所以需要在查询之前，对查询语句进行解析，完整流程如下：
-****
-```Mermaid
+
+```mermaid
 graph LR;
     解析查询-->检索文档;
     检索文档-->计算相关性后排序;
@@ -70,7 +70,7 @@ TopDocs topDocs = searcher.search(query, 10);  // 查找匹配的前10个结果
 
 ## 如何计算query和文档的相关性
 简单来说分为以下四步
-```Mermaid
+```mermaid
 graph LR;
     分词-->计算TF-IDF;
     计算TF-IDF-->计算余弦相似度;
