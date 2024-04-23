@@ -26,7 +26,7 @@ export async function getStaticPaths() {
   }
   return paths;
 }
-const { banner, call_to_action } = homepage.data;
+const { banner } = homepage.data;
 const { slug } = Astro.params;
 const posts = await getSinglePage(config.settings.blog_folder as any);
 const sortedPosts = sortByDate(posts);
@@ -80,6 +80,4 @@ const currentPosts = sortedPosts.slice(indexOfFirstPost, indexOfLastPost);
       </div>
     </div>
   </section>
-
-  <!-- <Cta cta={call_to_action} /> -->
 </Base>

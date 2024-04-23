@@ -1,18 +1,18 @@
 {
   "main": [
     {
-      "name": "Home",
+      "name": "主页",
       "url": "/"
     },
     {
-      "name": "Contact",
-      "url": "/contact"
+      "name": "关于我",
+      "url": "/aboutme"
     }
   ],
   "footer": [
     {
-      "name": "Contact",
-      "url": "/contact"
+      "name": "关于我",
+      "url": "/ahoutme"
     },
     {
       "name": "Privacy Policy",

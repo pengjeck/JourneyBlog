@@ -10,7 +10,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Image } from "astro:assets";
 import { getEntryBySlug } from "astro:content";
 const homepage = await getEntryBySlug("homepage", "index");
-const { banner, call_to_action } = homepage.data;
+const { banner } = homepage.data;
 const posts = await getSinglePage("posts");
 const sortPostByDate = sortByDate(posts);
 const totalPages = Math.ceil(posts.length / settings.pagination);
@@ -62,5 +62,4 @@ const totalPages = Math.ceil(posts.length / settings.pagination);
     </div>
   </div>
   <!-- ./End Blogs -->
-  <!-- <Cta cta={call_to_action} /> -->
 </Base>

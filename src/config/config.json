@@ -13,12 +13,11 @@
 
   "settings": {
     "blog_folder": "posts",
-    "pagination": 5,
-    "summary_length": 140
+    "pagination": 10,
+    "summary_length": 0
   },
 
   "params": {
-    "contact_form_action": "#",
     "copyright": "© 2024 [JourneyPeng](https://journeypeng.best/) All Rights Reserved"
   },
 
