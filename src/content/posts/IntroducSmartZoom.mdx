@@ -1,0 +1,46 @@
+---
+title: "我的第一个浏览器插件-SmartZoom"
+image: "/images/post/smartzoom/smartzoom.webp"
+authors: ["JourneyPeng"]
+date: 2024-04-27T18:00:00Z
+description: "SmartZoom是一款浏览器插件，旨在解决浏览网页时文字或内容过小的问题。其仿效MacOS上的SmartZoom功能，通过简单的操作实现对特定区域的放大，提供流畅的放大效果，使用户能够更轻松、舒适地浏览网页内容，而无需依赖触控板。"
+categories: ["SmartZoom", "浏览器插件", "网页放大", "眼睛保护", "用户体验"]
+type: "post"
+---
+
+# SmartZoom是什么？
+[安装地址](https://chromewebstore.google.com/detail/smartzoom/poeilnadcbkniibomfajbnemgekfeaak)
+
+SmartZoom是一个浏览器插件，它能够让你不依赖触控板，轻松实现类似MacOS上利用触控板双击网页部分内容区域，自动放大的效果。
+
+放大前：
+
+![SmartZoom放大前](/images/post/smartzoom/smartzoom-before.png)
+
+放大后：
+
+![SmartZoom放大后](/images/post/smartzoom/smartzoom-after.png)
+
+实现这样的操作只需要一步，鼠标悬浮到需要放大的区域，然后右击，点击ZoomIn即可
+
+![SmartZoom放大后](/images/post/smartzoom/smartzoom-zoomin.png)
+
+退出按一下`esc`
+
+# 为什么开发这个插件
+
+我是一个程序员，经常在开发的时候需要查阅包括reddit，Stack Overflow上的各种资料，但是这两个网站字都很小，看着不太舒服，费眼睛，在用mac的时候，我特别喜欢它的SmartZoom功能：把光标悬浮到网页的特定区域，双指双击触控板，网页会把这部分区域放大到窗口大小。而且放大的过程非常丝滑，操作体验很好。建议没有用过的朋友一定要试一试
+
+但是Mac的屏幕小，我更喜欢独立的大屏幕，合上mac，通过一根typec连上显示屏，配上机械键盘和鼠标，相信有不少人和我一样。一旦关上了mac，我就没办法使用SmartZoom了，这促使我开发一个浏览器插件来满足这个需求。
+
+# 这个插件解决了什么样的痛点
+
+1. 解决了SmartZoom所解决的痛点：浏览的文字或内容过小，眼球肌肉需要更多地收缩和调节来聚焦。容易引起眼球疲劳，眼部干燥，导致眼睛不适。
+
+2. 解决了在鼠标操作为主的工作环境中，无法智能的根据浏览区域放大特定内容。而在这个条件下的：`ctrl + 鼠标滚轮`，或者`ctrl + ‘+’`，都是整体放大网页，会导致排版变形内容错位，体验非常糟糕。
+
+# 插件亮点
+
+- 智能放大特定浏览内容，不改变网页布局，更专注的浏览网页
+- 无需触控板
+- 丝滑的放大效果
