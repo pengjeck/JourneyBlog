@@ -23,8 +23,26 @@ type: "post"
 
 域名是从spaceship上购买的，价格便宜一些
 
+# 1. 加入网站分析
+> 时间：2024-04-28
+
+用的是[umami](https://analytics.us.umami.is/)，很多推友推荐过，没有用开源自建host的版本，直接用了SAAS服务。接入非常丝滑，只需要在head里面加一个Script标签就搞定了，event这些功能还没解锁，后面按需更新。
+
+中间也研究过Google analysis和Microsoft clarify，觉得接入流程有些麻烦。
+
+很多人推荐umami，是看中了它开源，可以自己搭建服务上传打点数据，保护站点隐私。如果想要自己搭建umami服务的话，可以看[这篇教程](https://atpx.com/blog/build-umami-web-analytics/)
+
+# 2. 提交给Google search
+> 时间：2024-04-29
+
+这是我探索SEO的第一步，把网站提交给Google search的入口在[这里](https://search.google.com/search-console/welcome)，整个流程还是比较简单，主要的步骤是在DNS解析上加一个TXT记录。
+
+![google search engine dns record](/images/posts/google-search-dns-txt.png)
+
+提交过后需要等待一天左右的时间等待Google爬虫爬取你的网站，建立索引。然后就可以在[这里](https://search.google.com/search-console/about)查看网站的状态。
+
+
 # TODO
 - 增加浏览量等信息
-- 集成Google analysis等网站分析工具
 - 尝试在博客网站上做一些SEO，学习SEO
 - 支持将博客网站的最新文章一键发布到medium等平台。
