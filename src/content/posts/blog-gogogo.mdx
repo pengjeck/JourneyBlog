@@ -1,6 +1,6 @@
 ---
 title: "我的博客优化记录"
-image: "/images/post/enter-a-challenge-field.webp"
+image: "/images/post/blog-setup.webp"
 authors: ["JourneyPeng"]
 date: 2024-04-20T14:00:00Z
 description: ""
@@ -13,15 +13,28 @@ type: "post"
 
 其实我是一个没有太多前端基础的人，大学包括刚工作的那会，写过两个react native的APP和几个小网站页面，但学习的并不是很深入，再加上有好几年没有碰这些东西了，前端的各种技术框架迭代又很快，基本上属于从零开始。
 
-我是从推油们的推荐里面选择的博客框架，包括：
+我是从推油们的推荐里面选择的技术框架，如下：
 
 - Astro
 - Tailwind CSS
+  - SAAS圈事实上的标准了
 - React
-  
-部署用的是Vercel，免费套餐也够了，未来有计划转到cloudflare上，但应该需要做一些改动
+  - 国外react用得更多一些，考虑到以后还得搞Android和iOS呢，相当于是为react native打基础了。
 
-域名是从spaceship上购买的，价格便宜一些
+- Vercel
+  - 用的是免费套餐，对于个人博客来说，免费套餐够用了，未来有计划转到cloudflare上
+- spaceship
+  - 域名是从spaceship上购买的，我看了价格比godaddy和cloudflare便宜。但最近使用的时候发现不支持子域名，这点还是很意外的，一直觉得对于一个域名服务商来说，子域名是一个非常重要而且很有用的功能，很多其他服务上也都有这个功能，不明白为什么spaceship不支持。[参考](https://www.reddit.com/r/Domains/comments/17lnawj/comment/l1rw79a/)
+
+博客模板是[northendlab-light-astro](https://github.com/themefisher/northendlab-light-astro)，简单清爽。
+
+## 1.1 增加Latex和Mermaid支持
+
+- 支持latex还比较顺利，按照[这篇博客](https://blog.alexafazio.dev/blog/render-latex-in-astro/)一步步操作的，用到了两个库：
+  - remark-math：检测.md文件中的美元符号语法。基本上，我们想要渲染的任何LaTeX公式都将用单个$括起来用于行内，用双个$括起来用于多行。
+  - rehype-katex：解析和渲染数学LaTeX公式。
+
+- 支持Mermaid可以参考[这个issue](https://github.com/withastro/astro/issues/4433)
 
 # 1. 加入网站分析
 > 时间：2024-04-28
@@ -40,6 +53,15 @@ type: "post"
 ![google search engine dns record](/images/post/google-search-dns-txt.png)
 
 提交过后需要等待一天左右的时间等待Google爬虫爬取你的网站，建立索引。然后就可以在[这里](https://search.google.com/search-console/about)查看网站的状态。
+
+# 3. 增加字数统计
+
+实现起来很简单，[cr](https://github.com/pengjeck/JourneyBlog/commits/main/)
+```react
+<li>
+字数：{post.body.replace(/<\/?[^>]+(>|$)/g, '').length}
+</li>
+```
 
 
 # TODO
