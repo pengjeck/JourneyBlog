@@ -1,0 +1,41 @@
+---
+title: "我的第一个项目：TwitterBookmarkReview"
+image: "/images/post/twitter-bookmark-review-banner.webp"
+authors: ["JourneyPeng"]
+date: 2024-04-30T14:00:00Z
+description: "本文详述了一款名为"twitter-bookmark-review"的浏览器插件项目，旨在解决个人Twitter书签过多的问题。该项目通过插入历史收藏到Twitter主页瀑布流中，帮助用户重新审视这些书签，决定是否需要保留。技术上，使用了wxt框架、Vue和TypeScript进行开发，但在开发过程中遇到了组件热更新失败和MV3政策限制执行外部脚本的技术挑战。"
+categories: ["twitter-bookmark-review", "浏览器插件", "vue", "typescript", "twitter API", "wxt框架", "书签管理"]
+type: "post"
+---
+
+- 项目地址：https://github.com/pengjeck/twitter-bookmark-review/settings
+- 启动时间：2024.3.24
+- 盈利计划：无
+- 痛点：个人收藏的twitter书签太多，有一些收藏非常高质量但也有一些可能只是突然感兴趣，怎么不让书签越积越多，及时的消化这些历史收藏，不让收藏的东西变成一种形式化的动作，表演给自己看。
+- 解决方案：我想到参考flomo的**回顾**功能，在推特的瀑布流中插入历史收藏的书签，再次看到这些历史收藏或许我们就能决定是深入的看一下还是直接取消收藏了。
+
+# 技术方案
+
+用浏览器插件，在twitter的接口获取到用户收藏的书签列表，随机的插入到主页瀑布流中
+
+## 技术栈
+
+- [wxt](https://wxt.dev): 兼容多品牌浏览器的插件开发框架，支持HMR
+- vue
+- typescript
+
+# Review
+
+## 2024-3
+根据记忆，补充一下review
+
+在开发过程中遇到了两个主要的问题：
+1. vue组件热更新失败，导致频繁重启浏览器，后在github issue中得到了开发者的支持解决了，但中间因为这个问题耽搁了差不多两周没有继续动这个项目，因为开发体验实在是太差了。
+2. mv3已经禁止执行外部脚本，这导致了twitter官方样式脚本不能执行，目前还在想办法解决。
+
+## 2024-4
+截止到这个月底，这个项目已经持续了一个多月的时间，目前基本上处于停滞的状态。
+
+中间穿插了rss-schedule-storage和SmartZoom，还有这个博客，一共四个项目并行
+
+在写作这篇博客的过程中，我感觉这个项目还是有价值的，值得继续花点时间把它完成。
