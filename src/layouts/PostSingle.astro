@@ -22,6 +22,10 @@ const { title, authors, categories, image, date, tags }: PostData = post.data;
               class="mt-4 mb-8 flex flex-wrap items-center space-x-3 text-text"
             >
               <li>
+                字数：
+                {post.body.replace(/<\/?[^>]+(>|$)/g, '').length}
+              </li>
+              <li>
                 {
                   allAuthors
                     .filter((author) =>
