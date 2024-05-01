@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "Journey Peng's Blog",
-    "base_url": "https://stride-blog.vercel.app/",
+    "base_url": "https://journeypeng.best/",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
