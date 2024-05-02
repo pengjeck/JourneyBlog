@@ -103,10 +103,7 @@
   @apply prose-table:overflow-hidden prose-table:border prose-table:border-border;
   @apply prose-thead:border-border prose-thead:bg-theme-light prose-th:py-4 prose-th:px-4 prose-th:text-dark;
   @apply prose-tr:border-border;
-  @apply prose-ul:list-none;
-  @apply prose-ol:list-none;
   @apply prose-td:px-3 prose-td:py-4;
-  @apply prose-li:relative prose-li:text-text prose-li:before:absolute prose-li:before:-left-6 prose-li:before:top-2 prose-li:before:h-[22px] prose-li:before:w-6 prose-li:before:bg-[url('/images/pointing-right.svg')] prose-li:before:bg-[length:20px_16px] prose-li:before:bg-no-repeat prose-li:before:content-[''];
 }
 
 //banner
