@@ -1,6 +1,8 @@
 import fetch from 'node-fetch'
 
-const sitemapUrls = ['https://journeypeng.best/sitemap-index.xml']
+const apiKeyFileUrl = "https://www.journeypeng.best/4dc4c9c693e344bc9f80c78e5fa5a42c.txt"
+const sitemapUrls = ['https://journeypeng.best/sitemap-index.xml',
+	'https://journeypeng.best/sitemap-0.xml']
 
 fetch(apiKeyFileUrl)
 	.then((response) => response.text())
