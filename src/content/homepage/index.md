@@ -1,5 +1,5 @@
 ---
 banner:
-  title: "Hi, I’m Journey Peng(Peng的旅程). I share what I have learned in the field of software development."
+  title: "JourneyPeng Blog 独立开发者的博客，\n怀着创业的梦想前进"
   image: "/images/banner/illustration.png"
 ---

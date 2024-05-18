@@ -1,14 +1,14 @@
 {
   "site": {
     "title": "Journey Peng's Blog",
-    "base_url": "https://journeypeng.best/",
+    "base_url": "https://journeypeng.best",
     "base_path": "/",
     "trailing_slash": false,
     "favicon": "/images/favicon.png",
     "logo_ignore": "/images/logo.png",
     "logo_width": "31",
     "logo_height": "31",
-    "logo_text": "Journey"
+    "logo_text": "JourneyPeng博客"
   },
 
   "settings": {
@@ -23,7 +23,8 @@
 
   "metadata": {
     "meta_author": "Journey Peng",
-    "meta_image": "/images/og-image.png",
+    "twitter_site": "pjwhusir",
+    "meta_image": "/images/logo.png",
     "meta_description": "Journey Peng's blog for share."
   }
 }
