@@ -1,0 +1,83 @@
+---
+title: "操作系统进程"
+image: "/images/post/blog-setup.webp"
+authors: ["JourneyPeng"]
+date: 2021-06-13T14:00:00Z
+description: ""
+categories: ["操作系统", "进程"]
+type: "post"
+---
+
+@[toc]
+# 定义
+进程已经退出了，但是还保留着进程表记录
+
+在子进程退出时，如果直接抛弃这个进程的所有结果，这个进程的返回值会丢失。所以需要父进程等待接收这个返回值，即使这个进程不占用任何数据，除了进程表里的记录——这就产生了僵尸进程。
+
+# 如何产生
+产生僵尸进程的代码
+```c
+pid=fork();
+if (pid==0) {
+    exit(0);  // <--- zombie is created on here
+} else {
+    // some parent code ...
+}
+```
+
+# 避免产生僵尸进程的代码：
+
+方式1：waitpid
+```c
+pid=fork();
+if (pid==0) {
+    exit(0);    
+} else {
+    waitpid(pid);  // <--- this call reaps zombie
+    // some parent code ...
+}
+```
+
+方式2：主动产生孤儿进程，让init去wait
+```c
+pid=fork();
+if (pid==0) {
+    // child
+    if (fork()==0) {
+        // grandchild
+        sleep(1); // sleep a bit to let child die first
+        exit(0);  // grandchild exits, no zombie (adopted by init)
+    }
+    exit(0);      // child dies first
+} else {
+     waitpid(pid);  // still need to wait on child to avoid it zombified
+     // some parent code ...
+}
+```
+
+方式3：明确忽略子进程的结果
+```c
+signal(SIGCHLD, SIG_IGN); // <-- ignore child fate, don't let it become zombie
+pid=fork();
+if (pid==0) {
+    exit(0); // <--- zombie should NOT be created here
+} else {
+     // some parent code ...
+}
+```
+# 扩展
+## 孤儿进程
+指的是：父进程已经结束了，但是子进程还在运行中。
+
+问题1：
+这类进程是怎么实现wait然后避免成为僵尸进程的呢？还是说，因为永远不会结束，所以也不会成为僵尸进程？
+答案：
+孤儿进程结束之后不会成为僵尸进程，init进程会负责wait
+
+## 特点
+1. 只在Unix or Unix like操作系统中才会出现
+2. 子进程在从资源表中删除之前总是首先成为僵尸进程。
+
+# 参考：
+https://stackoverflow.com/questions/16078985/why-zombie-processes-exist
+https://en.wikipedia.org/wiki/Zombie_process

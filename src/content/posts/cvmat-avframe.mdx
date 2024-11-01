@@ -1,0 +1,213 @@
+---
+title: "OpenCV Mat 转 AvFrame"
+image: "/images/post/blog-setup.webp"
+authors: ["JourneyPeng"]
+date: 2021-10-23T14:00:00Z
+description: ""
+categories: ["OpenCV", "FFmpeg"]
+type: "post"
+---
+
+看了网上很多关于如果把cv::Mat转为AvFrame的教程，实践下来都没有达到满意的效果，多少有些兼容性或者无法运行的问题，于是我决定查找文档，自己实现一个。同时为了致敬雷神，把自己实现的思路和完整可运行的代码贡献出来，大家一起学习
+@[toc]
+
+# 完整样例
+代码同步发布在github上，欢迎大家下载运行
+
+https://github.com/pengjeck/media-market
+
+我相信能够运行的代码，对理解一定更有帮助
+
+## 运行环境
+- MacBook Pro (13-inch, M1, 2020)
+- FFmpeg 4.2
+- OpenCV 2.4.13.7
+- Clion 2021.2
+
+```cpp
+//
+// Created by pengjian05 on 2021/10/23.
+//
+#include<string>
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <libavformat/avformat.h>
+#include <libavutil/error.h>
+#include <libavutil/imgutils.h>
+#include <libavutil/opt.h>
+#include <libavutil/pixfmt.h>
+#include <libavutil/timestamp.h>
+#include <libswscale/swscale.h>
+#ifdef __cplusplus
+}
+#endif
+
+
+static bool readAVPixelFormatId(const cv::Mat &mat, AVPixelFormat &format) {
+    int type = mat.type();
+    uchar depth = type & CV_MAT_DEPTH_MASK;
+    uchar channel = 1 + (type >> CV_CN_SHIFT);
+
+    std::cout << "type=" << type << ", depth=" << (int) depth
+              << ", channel num=" << (int) channel << std::endl;
+
+    if (depth == CV_8U) {
+        if (channel == 3) {
+            format = AVPixelFormat::AV_PIX_FMT_BGR24;
+            return true;
+        } else if (channel == 4) {
+            format = AVPixelFormat::AV_PIX_FMT_BGRA;
+            return true;
+        }
+    }
+    return false;
+}
+
+static std::shared_ptr<AVFrame> convertToAVFrame(
+        cv::Mat &mat,
+        const AVPixelFormat &target_format) {
+    AVPixelFormat src_format = AVPixelFormat::AV_PIX_FMT_NONE;
+    if (!readAVPixelFormatId(mat, src_format)) {
+        std::cout << "read av pixel src_format id failed." << std::endl;
+        return nullptr;
+    }
+
+    std::shared_ptr<AVFrame> frame(
+            av_frame_alloc(), [](auto p) { av_frame_free(&p); });
+
+    frame->format = target_format;
+    frame->width = mat.cols;
+    frame->height = mat.rows;
+    int ret = av_frame_get_buffer(frame.get(), 32);
+    if (ret < 0) {
+        std::cout << "Could not allocate the video frame data." << std::endl;
+        return nullptr;
+    }
+
+    ret = av_frame_make_writable(frame.get());
+    if (ret < 0) {
+        std::cout << "Av frame make writable failed." << std::endl;
+        return nullptr;
+    }
+
+    SwsContext *swsctx = sws_getContext(
+            frame->width,
+            frame->height,
+            src_format,
+            frame->width,
+            frame->height,
+            target_format,
+            SWS_BILINEAR,
+            nullptr,
+            nullptr,
+            nullptr);
+
+    const int stride[4] = {static_cast<int>(mat.step[0])};
+
+    int scale_res = sws_scale(
+            swsctx,
+            &mat.data,
+            stride,
+            0,
+            mat.rows,
+            frame->data,
+            frame->linesize);
+    std::cout << "sws scale res=" << scale_res << std::endl;
+
+    return frame;
+}
+
+static std::shared_ptr<AVFrame> read_frame(
+        const std::string &file_name,
+        const AVPixelFormat &target_format) {
+    cv::Mat mat = cv::imread(file_name, cv::IMREAD_UNCHANGED);
+    return convertToAVFrame(mat, target_format);
+}
+
+int main() {
+    AVPixelFormat target_pix_fmt = AV_PIX_FMT_YUVA420P;
+    const std::shared_ptr<AVFrame> &frame = read_frame(
+            "../resources/background_earth_landscape.jpg", target_pix_fmt);
+    std::cout << "target image width=" << frame->width
+              << ", image height=" << frame->height << std::endl;
+    return 1;
+}
+```
+
+# 过程拆解
+
+## 用opencv 读取图片
+这一步是通过opencv的imread获取到cv::Mat，这样才有后面可以用来转换的数据
+核心代码就一行
+```cpp
+cv::Mat mat = cv::imread(file_name, cv::IMREAD_UNCHANGED);
+```
+这里IMREAD_UNCHANGED表示的，8bit的位深，不改变图片本来的颜色通道，原图是rgba，出来还是rgba。但如果是IMREAD_GRAYSCALE，图片则会被强制转为灰度图片。
+
+## 获取原图的AVPixelFormat
+
+我们计划是使用[sws_scale](https://ffmpeg.org/doxygen/3.1/group__libsws.html#gae531c9754c9205d90ad6800015046d74)来实现转换的，这个函数的签名如下：
+```cpp
+int sws_scale(struct SwsContext *c, const uint8_t *const srcSlice[],
+              const int srcStride[], int srcSliceY, int srcSliceH,
+              uint8_t *const dst[], const int dstStride[]);
+```
+
+sws_scale的第一个参数就是SwsContext，这个就是用来实现格式转换的上下文context，context要求输入源图的pixel format和目标图的pixel format
+
+获取原图的pixel format，需要将Mat.type做一个转换，这里我们用了下面的函数：
+```cpp
+static bool readAVPixelFormatId(const cv::Mat& mat, AVPixelFormat& format) {
+    int type = mat.type();
+    uchar depth = type & CV_MAT_DEPTH_MASK;
+    uchar channel = 1 + (type >> CV_CN_SHIFT);
+
+    LOG(INFO) << "type=" << type << ", depth=" << (int)depth
+              << ", channel num=" << (int)channel;
+
+    if (depth == CV_8U) {
+        if (channel == 3) {
+            format = AVPixelFormat::AV_PIX_FMT_BGR24;
+            return true;
+        } else if (channel == 4) {
+            format = AVPixelFormat::AV_PIX_FMT_BGRA;
+            return true;
+        }
+    }
+    return false;
+}
+```
+根据[mat.type](https://docs.opencv.org/4.5.3/d3/d63/classcv_1_1Mat.html#af2d2652e552d7de635988f18a84b53e5)的定义，分别获取位深和通道数量，然后根据这两个参数映射到不同的AVPixelFormat，这里需要注意的是，opencv的图片都是bgr的，而不是rgb的，所以输出也需要选择AVPixelFormat::AV_PIX_FMT_BGR24，而不是AVPixelFormat::AV_PIX_FMT_RGB24。
+
+## 创建sws_getContext
+最重要的是高宽和像素格式
+```cpp
+    SwsContext* swsctx = sws_getContext(
+            frame->width,
+            frame->height,
+            src_format,
+            frame->width,
+            frame->height,
+            target_format,
+            SWS_BILINEAR,
+            nullptr,
+            nullptr,
+            nullptr);
+```
+
+## 开始转换
+```cpp
+int scale_res = sws_scale(
+            swsctx,
+            &mat.data,
+            stride,
+            0,
+            mat.rows,
+            frame->data,
+            frame->linesize);
+```
+到这里，你就得到了由cv::Mat转换而来的AvFrame了。

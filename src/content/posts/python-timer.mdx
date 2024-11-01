@@ -1,0 +1,78 @@
+---
+title: "Python定时器"
+image: "/images/post/blog-setup.webp"
+authors: ["JourneyPeng"]
+date: 2021-10-27T14:00:00Z
+description: ""
+categories: ["Python", "定时器"]
+type: "post"
+---
+
+# 问题
+如果想间隔一定时间发送一些数据，或者处理某一个任务，python里面比较简单的实现方式是sleep，但是简单的sleep会随着任务的持续执行，和最开始的时间偏离越来越大。主要原因有两个
+1. python中sleep执行的时间并不精确，难以做到毫秒级的精度
+2. 任务本身执行的时候会和sleep执行的时间累加
+
+为了解决上面两个问题，设计了下面的代码
+
+# 实现
+
+```python
+from time import sleep, time
+
+
+class RepeatedTimer(object):
+    def __init__(self, interval, function, *args, **kwargs):
+        self.interval = interval
+        self.function = function
+        self.is_running = False
+        self.args = args
+        self.kwargs = kwargs
+        self.start()
+
+    def _run(self):
+        self.is_running = False
+        self.start()
+        self.function(*self.args, **self.kwargs)
+
+    def start(self):
+        start = int(time() * 1000)
+        i = 0
+        if not self.is_running:
+            self.is_running = True
+
+            while True:
+                if not self.is_running:
+                    break
+
+                i += 1
+                now = int(time() * 1000)
+                sleep_ms = i * self.interval - (now - start)
+                if sleep_ms < 0:
+                    self.function(*self.args, **self.kwargs)
+                else:
+                    sleep(sleep_ms / 1000.0)
+                    self.function(*self.args, **self.kwargs)
+
+    def stop(self):
+        self.is_running = False
+```
+
+# 使用
+```python
+def hello(name):
+    print(f"[{time()}]\t Hello {name}!")
+    sleep(0.01)
+
+
+print("starting...")
+
+rt = RepeatedTimer(100, hello, "world")
+try:
+    sleep(50)
+finally:
+    rt.stop()
+```
+
+# 参考
+https://stackoverflow.com/questions/3393612/run-certain-code-every-n-seconds

@@ -1,0 +1,186 @@
+---
+title: "Python高级数据结构——堆"
+image: "/images/post/blog-setup.webp"
+authors: ["JourneyPeng"]
+date: 2022-05-30T14:00:00Z
+description: ""
+categories: ["Python", "数据结构"]
+type: "post"
+---
+
+# 概念
+
+在一个 最小堆 (min heap) 中，如果 P 是 C 的一个父级节点，那么 P 的 key（或 value) 应小于或等于 C 的对应值。 正因为此，堆顶元素一定是最小的，我们会利用这个特点求最小值或者第 k 小的值。
+
+在一个 最大堆 (max heap) 中，P 的 key（或 value) 大于或等于 C 的对应值。
+
+# 接口函数
+
+以python为例，说明堆的几个常见操作，这里需要用到一个内置的包：heapq
+
+## 初始化 Heapify
+
+python中使用堆是通过传入一个数组，然后调用一个函数，在原地让传入的数据具备堆的特性
+
+```python
+import heapq
+raw = [3, 1, 5]
+heapq.heapify(raw)
+
+print(heapq.heappop(raw))
+# output: 1
+```
+
+需要注意的是，heapify默认构造的是小顶堆（min heap），如果要构造大顶堆，思路是把所有的数值倒转，既* -1，例如：
+
+```python
+import heapq
+raw = [3, 1, 5]
+reverse_raw = [-val for val in raw]
+heapq.heapify(reverse_raw)
+
+min_val = print(-heapq.heappop(reverse_raw))
+# output: -5
+```
+
+## 弹出最大/最小值
+
+使用heapq提供的函数：[heappop](https://docs.python.org/3/library/heapq.html#heapq.heappush)来实现
+
+具体使用方式参考 [初始化Heapify](https://www.notion.so/505533bf461742febe27603244d3bfe1)
+
+## push数据
+
+使用heapq提供的函数：[heappush](https://docs.python.org/3/library/heapq.html#heapq.heappush)来实现
+
+```python
+import heapq
+raw = [3, 1, 5]
+heapq.heapify(raw)
+
+# 这个时候raw还维持着最小栈的特性
+heapq.heappush(raw, 11)
+
+print(heapq.heappop(raw))
+# output: 1
+
+heapq.heappush(raw, -1)
+print(heapq.heappop(raw))
+# output: -1
+```
+
+同时heapq还提供另外一个函数：[heappushpop](https://docs.python.org/3/library/heapq.html#heapq.heappush)，能够在一个函数实现push&pop两个操作；顺序是：先push再pop
+
+根据官方文档的描述，这个函数会比先在外围先调用heappush，再调用heappop，效率更高
+
+```python
+import heapq
+raw = [3, 1, 5]
+heapq.heapify(raw)
+
+print(heapq.heappushpop(raw, -1))
+# output: -1
+```
+
+## heapreplace
+
+[heapreplace]((https://docs.python.org/zh-cn/3/library/heapq.html#heapq.heapreplace))是**先pop数据再push数据，和heappushpop的顺序是反着的；** 同样的，这样调用的性能也会比先调用heappop再调用heappush更好
+
+```python
+import heapq
+raw = [3, 1, 5]
+heapq.heapify(raw)
+
+print(heapq.heapreplace(raw, -1))
+# output: 1
+```
+
+如果pop的时候队列是空的，会抛出一个异常
+
+```python
+import heapq
+raw = []
+heapq.heapify(raw)
+
+print(heapq.heapreplace(raw, -1))
+# exception: IndexError: index out of range
+```
+
+## Merge两个数组
+
+可以通过[heapq.merge](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.merge)将多个**已排序**的输入合并为一个已排序的输出，这个本质上不是堆；其实就是用两个指针迭代
+
+```python
+import heapq
+raw = [1, 3, 5]
+raw1 = [2, 9, 10]
+
+print([i for i in heapq.merge(raw, raw1)])
+```
+
+对于这个问题，有一个算法题可以实现相同的功能
+
+```python
+from typing import List
+
+def merge(nums1: List[int], nums2: List[int]) -> List[int]:
+    result = []
+    i, j = 0, 0
+    while i < len(nums1) and j < len(nums2):
+        if nums1[i] < nums2[j]:
+            result.append(nums1[i])
+            i += 1
+        else:
+            result.append(nums2[j])
+            j += 1
+
+    for i1 in range(i, len(nums1)):
+        result.append(nums1[i1])
+
+    for j1 in range(j, len(nums2)):
+        result.append(nums2[j1])
+
+    return result
+
+print(merge([1, 4, 9], [2, 11, 14, 199]))
+print(merge([], [2, 11, 14, 199]))
+print(merge([1, 4, 9], []))
+print(merge([1, 4, 9], [133]))
+print(merge([1, 4, 9], [2]))
+print(merge([1, 4, 9], [-1]))
+```
+
+## 前n个最大/小的数
+
+从 *iterable* 所定义的数据集中返回前 *n*个最大/小元素组成的列表。
+
+函数为：[heapq.nlargest()](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.nlargest)  | [heapq.nsmallest()](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.nsmallest)
+
+```python
+import heapq
+print(heapq.nlargest(2, [3, 1, 5]))
+# output: [5,3]
+
+print(heapq.nsmallest(2, [3,1,5]))
+# output: [1,3]
+```
+
+# 应用
+
+## 堆排序
+
+```python
+from heapq import heappush, heappop
+
+def heapsort(iterable):
+    h = []
+    for value in iterable:
+        heappush(h, value)
+    return [heappop(h) for i in range(len(h))]
+
+print(heapsort([3, 1, 5]))
+```
+
+# 参考
+
+[heapq - Heap queue algorithm - Python 3.10.4 documentation](https://docs.python.org/zh-cn/3/library/heapq.html#heapq.nlargest)
